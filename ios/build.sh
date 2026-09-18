@@ -8,6 +8,9 @@ set -euo pipefail
 : "${ASC_KEY_ID:?App Store Connect APIキーのKey IDを指定してください}"
 : "${ASC_ISSUER_ID:?App Store Connect APIキーのIssuer IDを指定してください}"
 : "${ASC_KEY_PATH:?App Store Connect APIキー（.p8）のパスを指定してください}"
+# Secretsの貼り付けで紛れ込んだ空白・改行を除く。
+ASC_KEY_ID=$(printf %s "$ASC_KEY_ID" | tr -d '[:space:]')
+ASC_ISSUER_ID=$(printf %s "$ASC_ISSUER_ID" | tr -d '[:space:]')
 APP_NAME="${APP_NAME:-Kittan Radar}"
 BUNDLE_ID="${BUNDLE_ID:-me.tinykitten.kittan-radar}"
 BUILD_NUMBER="${BUILD_NUMBER:-1}"
