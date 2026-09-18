@@ -42,14 +42,15 @@ AUTH=(-allowProvisioningUpdates
   -authenticationKeyID "$ASC_KEY_ID"
   -authenticationKeyIssuerID "$ASC_ISSUER_ID")
 
-# アーカイブは署名なしで作り、書き出し時にクラウド署名する（CIで毎回開発用証明書が作られるのを避ける）。
+# アーカイブも自動署名する。未署名のアーカイブにはチーム情報が残らず、書き出し時に
+# 「Error Downloading App Information」で失敗するため。ランナーは毎回まっさらなので
+# 実行ごとにApple Development証明書が作られる。上限に達したらDeveloperサイトで失効させる。
 xcodebuild archive \
   -project "$PROJECT" -scheme "$APP_NAME" -configuration Release \
   -destination 'generic/platform=iOS' -archivePath "$OUT/app.xcarchive" \
-  DEVELOPMENT_TEAM="$TEAM_ID" \
+  DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic \
   MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
   INFOPLIST_KEY_ITSAppUsesNonExemptEncryption=NO \
-  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
   "${AUTH[@]}"
 
 cat > "$OUT/ExportOptions.plist" <<PLIST
