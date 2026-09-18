@@ -18,7 +18,7 @@ Safari拡張はアプリに同梱して配布する仕組みのため、ビル�
 
 ### TestFlightで入れる（Linuxのみで可）
 
-`main` へのpush（`extension/`・`ios/` の変更時）か、Actionsタブからの手動実行で `.github/workflows/testflight.yml` が動きます。`safari-web-extension-converter` でXcodeプロジェクトを生成し、App Store Connect APIキーによるクラウド署名で書き出し、TestFlightへアップロードします。証明書やプロビジョニングプロファイルを手元で管理する必要はありません。Apple Developer Programへの加入が必要です。
+`master` へのpush（`extension/`・`ios/` の変更時）か、Actionsタブからの手動実行で `.github/workflows/testflight.yml` が動きます。`safari-web-extension-converter` でXcodeプロジェクトを生成し、App Store Connect APIキーによるクラウド署名で書き出し、TestFlightへアップロードします。証明書やプロビジョニングプロファイルを手元で管理する必要はありません。Apple Developer Programへの加入が必要です。
 
 初回だけ、ブラウザで次を準備します。
 
