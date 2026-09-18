@@ -28,6 +28,11 @@ xcrun safari-web-extension-converter extension \
 PROJECT=$(find "$OUT" -maxdepth 3 -name '*.xcodeproj' | head -n 1)
 [ -n "$PROJECT" ] || { echo "Xcodeプロジェクトが生成されませんでした" >&2; exit 1; }
 
+# 変換ツールはアプリ名から大文字入りのバンドルID（me.tinykitten.Kittan-Radar）を作るため、
+# App Store ConnectのAppに合わせて小文字にする。
+perl -pi -e 's/(PRODUCT_BUNDLE_IDENTIFIER = )([^\$;]+);/$1\L$2;/' "$PROJECT/project.pbxproj"
+grep PRODUCT_BUNDLE_IDENTIFIER "$PROJECT/project.pbxproj"
+
 # 変換ツールが作るAppIconは空で、アイコンなしではApp Store Connectのアップロード検証に落ちる。
 ICONSET=$(find "$OUT" -name AppIcon.appiconset -not -path '*Extension*' | head -n 1)
 [ -n "$ICONSET" ] || { echo "AppIcon.appiconsetが見つかりません" >&2; exit 1; }
