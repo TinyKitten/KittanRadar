@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # extension/ からiOS用のSafari拡張アプリを生成し、App Store Connect（TestFlight）へアップロードする。
-# macOS + Xcode 16以降で実行する。GitHub Actionsの .github/workflows/testflight.yml から呼ばれる。
+# macOS + Xcode 26以降で実行する（App Store ConnectがiOS 26 SDK以降を要求するため）。GitHub Actionsの .github/workflows/testflight.yml から呼ばれる。
 # 証明書・プロファイルは手元に持たず、App Store Connect APIキーによるクラウド署名で書き出し時に署名する。
 set -euo pipefail
 
