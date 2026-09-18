@@ -31,7 +31,6 @@ PROJECT=$(find "$OUT" -maxdepth 3 -name '*.xcodeproj' | head -n 1)
 # 変換ツールはアプリ名から大文字入りのバンドルID（me.tinykitten.Kittan-Radar）を作るため、
 # App Store ConnectのAppに合わせて小文字にする。
 perl -pi -e 's/(PRODUCT_BUNDLE_IDENTIFIER = )([^\$;]+);/$1\L$2;/' "$PROJECT/project.pbxproj"
-grep PRODUCT_BUNDLE_IDENTIFIER "$PROJECT/project.pbxproj"
 
 # 変換ツールが作るAppIconは空で、アイコンなしではApp Store Connectのアップロード検証に落ちる。
 ICONSET=$(find "$OUT" -name AppIcon.appiconset -not -path '*Extension*' | head -n 1)
@@ -70,13 +69,7 @@ cat > "$OUT/ExportOptions.plist" <<PLIST
 </dict></plist>
 PLIST
 
-# 失敗時はxcodebuildが一時フォルダに残す詳細ログ（IDEDistribution.verbose.log など）を
-# 書き出し先へ移し、ワークフローのArtifactとして保存できるようにする。
 xcodebuild -exportArchive \
   -archivePath "$OUT/app.xcarchive" -exportPath "$OUT/export" \
   -exportOptionsPlist "$OUT/ExportOptions.plist" \
-  "${AUTH[@]}" || {
-  mkdir -p "$OUT/export"
-  cp -R "${TMPDIR:-/tmp}"/*.xcdistributionlogs "$OUT/export/" 2>/dev/null || true
-  exit 1
-}
+  "${AUTH[@]}"
