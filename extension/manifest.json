@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "きったんレーダー — Jev",
+  "version": "1.0.0",
+  "description": "過去の対話をFew-shotに、今見ているページの好きそう度を表示。",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://api.typesafe.ai/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "このページの好きそう度を調べる"
+  },
+  "options_page": "options.html"
+}
