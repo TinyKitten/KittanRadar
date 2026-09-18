@@ -42,17 +42,14 @@ AUTH=(-allowProvisioningUpdates
   -authenticationKeyID "$ASC_KEY_ID"
   -authenticationKeyIssuerID "$ASC_ISSUER_ID")
 
-# アーカイブも自動署名する。未署名のアーカイブにはチーム情報が残らず、書き出し時に
-# 「Error Downloading App Information」で失敗するため。ランナーは毎回まっさらなので
-# 実行ごとにApple Development証明書が作られる。上限に達したらDeveloperサイトで失効させる。
-# Xcode 16はプロファイルをこのフォルダに保存するが、まっさらなランナーには無く保存に失敗するため先に作る。
-mkdir -p "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
+# アーカイブは署名なしで作り、書き出し時にクラウド署名する（CIで毎回開発用証明書が作られるのを避ける）。
 xcodebuild archive \
   -project "$PROJECT" -scheme "$APP_NAME" -configuration Release \
   -destination 'generic/platform=iOS' -archivePath "$OUT/app.xcarchive" \
-  DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic \
+  DEVELOPMENT_TEAM="$TEAM_ID" \
   MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
   INFOPLIST_KEY_ITSAppUsesNonExemptEncryption=NO \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
   "${AUTH[@]}"
 
 cat > "$OUT/ExportOptions.plist" <<PLIST
@@ -68,7 +65,13 @@ cat > "$OUT/ExportOptions.plist" <<PLIST
 </dict></plist>
 PLIST
 
+# 失敗時はxcodebuildが一時フォルダに残す詳細ログ（IDEDistribution.verbose.log など）を
+# 書き出し先へ移し、ワークフローのArtifactとして保存できるようにする。
 xcodebuild -exportArchive \
   -archivePath "$OUT/app.xcarchive" -exportPath "$OUT/export" \
   -exportOptionsPlist "$OUT/ExportOptions.plist" \
-  "${AUTH[@]}"
+  "${AUTH[@]}" || {
+  mkdir -p "$OUT/export"
+  cp -R "${TMPDIR:-/tmp}"/*.xcdistributionlogs "$OUT/export/" 2>/dev/null || true
+  exit 1
+}
