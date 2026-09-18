@@ -3,6 +3,13 @@
   "name": "きったんレーダー — Jev",
   "version": "1.0.0",
   "description": "過去の対話をFew-shotに、今見ているページの好きそう度を表示。",
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png",
+    "256": "icons/icon-256.png",
+    "512": "icons/icon-512.png"
+  },
   "permissions": [
     "activeTab",
     "scripting",
@@ -19,13 +26,22 @@
     "type": "module"
   },
   "action": {
-    "default_title": "このページの好きそう度を調べる"
+    "default_title": "このページの好きそう度を調べる",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png",
+      "128": "icons/icon-128.png"
+    }
   },
   "options_page": "options.html",
   "web_accessible_resources": [
     {
-      "resources": ["fonts/*.woff2"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "fonts/*.woff2"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }

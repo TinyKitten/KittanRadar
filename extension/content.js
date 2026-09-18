@@ -1,23 +1,32 @@
 (()=>{
  if(globalThis.__kittanRadar)return;globalThis.__kittanRadar=true;
- let host,root,route,fonts;
+ const ext=globalThis.browser??chrome;
+ let host,root,route,fonts,frame;
  function loadFonts(){
   if(fonts)return;fonts=true;
   for(const [family,file,weight] of [['Kittan Inter','inter.woff2','100 900'],['Kittan Sans JP','kittan-sans-jp-regular.woff2','400'],['Kittan Sans JP','kittan-sans-jp-medium.woff2','500'],['Kittan Sans JP','kittan-sans-jp-bold.woff2','700']]){
-   try{const f=new FontFace(family,`url(${chrome.runtime.getURL('fonts/'+file)})`,{weight,display:'swap'});document.fonts.add(f);f.load().catch(()=>{});}catch{}
+   try{const f=new FontFace(family,`url(${ext.runtime.getURL('fonts/'+file)})`,{weight,display:'swap'});document.fonts.add(f);f.load().catch(()=>{});}catch{}
   }
  }
  function make(){
   if(host?.isConnected)return;
   loadFonts();
   host=document.createElement('div');host.id='kittan-radar';
-  host.style.cssText='all:initial;position:fixed;right:24px;bottom:24px;z-index:2147483647;';
+  host.style.cssText='all:initial;position:fixed;left:0;top:0;width:100vw;height:100vh;transform-origin:0 0;pointer-events:none;z-index:2147483647;';
   root=host.attachShadow({mode:'closed'});
   root.innerHTML=`<style>
-  :host{color-scheme:light dark;--bg:#fff;--text:#0b1a2c;--muted:#56687e;--line:#dde7f3;--track:#e5f3ff;--accent:#008ffe;--shadow:0 1px 2px #0b1a2c14,0 18px 56px #0b1a2c29}@media(prefers-color-scheme:dark){:host{--bg:#0e1a2b;--text:#e8f1fb;--muted:#8fa3bb;--line:#1f3048;--track:#16304f;--shadow:0 18px 64px #0009}}*{box-sizing:border-box}section{width:300px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:22px;padding:22px;font:14px/1.6 "Kittan Inter","Kittan Sans JP",system-ui,sans-serif;font-feature-settings:"palt";letter-spacing:.02em;-webkit-font-smoothing:antialiased;box-shadow:var(--shadow)}header{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--accent)}button{border:0;background:none;color:var(--muted);cursor:pointer;font:300 22px/1 "Kittan Inter",system-ui}button:hover{color:var(--text)}h2{font-size:15px;margin:16px 0 0;font-weight:700;letter-spacing:.03em}.number{font-size:64px;line-height:1.15;letter-spacing:-.04em;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)}.number small{font-size:16px;font-weight:500;letter-spacing:.02em;color:var(--muted)}p{margin:10px 0 0;color:var(--muted);font-size:12px;letter-spacing:.04em}.track{height:5px;background:var(--track);border-radius:9px;margin:14px 0}.fill{height:100%;border-radius:9px;background:linear-gradient(90deg,#5cb6ff,var(--accent));width:0;transition:width .4s}footer{font-size:10px;letter-spacing:.04em;color:var(--muted);margin-top:16px;border-top:1px solid var(--line);padding-top:12px}@media(max-width:380px){section{width:260px}}
+  :host{color-scheme:light dark;--bg:#fff;--text:#0b1a2c;--muted:#56687e;--line:#dde7f3;--track:#e5f3ff;--accent:#008ffe;--shadow:0 1px 2px #0b1a2c14,0 18px 56px #0b1a2c29}@media(prefers-color-scheme:dark){:host{--bg:#0e1a2b;--text:#e8f1fb;--muted:#8fa3bb;--line:#1f3048;--track:#16304f;--shadow:0 18px 64px #0009}}*{box-sizing:border-box}section{position:absolute;right:clamp(12px,4%,24px);bottom:calc(clamp(12px,3%,24px) + env(safe-area-inset-bottom,0px));width:min(300px,calc(100% - 24px));max-height:calc(100% - 24px);overflow:auto;overscroll-behavior:contain;pointer-events:auto;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:22px;padding:22px;font:14px/1.6 "Kittan Inter","Kittan Sans JP",system-ui,sans-serif;font-feature-settings:"palt";letter-spacing:.02em;-webkit-font-smoothing:antialiased;box-shadow:var(--shadow)}header{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--accent)}button{display:grid;place-items:center;min-width:44px;min-height:44px;margin:-14px -14px -14px 0;padding:0;border:0;background:none;color:var(--muted);cursor:pointer;font:300 22px/1 "Kittan Inter",system-ui;touch-action:manipulation;-webkit-tap-highlight-color:transparent}@media(hover:hover){button:hover{color:var(--text)}}h2{font-size:15px;margin:16px 0 0;font-weight:700;letter-spacing:.03em}.number{font-size:64px;line-height:1.15;letter-spacing:-.04em;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)}.number small{font-size:16px;font-weight:500;letter-spacing:.02em;color:var(--muted)}p{margin:10px 0 0;color:var(--muted);font-size:12px;letter-spacing:.04em}.track{height:5px;background:var(--track);border-radius:9px;margin:14px 0}.fill{height:100%;border-radius:9px;background:linear-gradient(90deg,#5cb6ff,var(--accent));width:0;transition:width .4s}footer{font-size:10px;letter-spacing:.04em;color:var(--muted);margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
   </style><section role="status" aria-live="polite"><header>KITTAN RADAR <button aria-label="閉じる">×</button></header><h2>このページ、好きそう？</h2><div class="number">…</div><div class="track"><div class="fill"></div></div><p class="status"></p><footer>Jev · 対話から推定</footer></section>`;
-  root.querySelector('button').onclick=()=>host.remove();document.documentElement.append(host);
+  root.querySelector('button').onclick=()=>host.remove();document.documentElement.append(host);place();
  }
+ // position:fixedはレイアウトビューポート基準のため、モバイルSafariではピンチズームやPC向けレイアウトのページでパネルが極小・画面外になる。
+ // ホストを表示中のビジュアルビューポートに重ね、ズーム倍率を打ち消して常に画面上で同じ大きさに見せる。
+ function place(){
+  const v=globalThis.visualViewport;if(!v||!host?.isConnected)return;
+  Object.assign(host.style,{width:v.width*v.scale+'px',height:v.height*v.scale+'px',transform:`translate(${v.offsetLeft}px,${v.offsetTop}px) scale(${1/v.scale})`});
+ }
+ function schedule(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;place();});}
+ globalThis.visualViewport?.addEventListener('resize',schedule);globalThis.visualViewport?.addEventListener('scroll',schedule);
  function render(m){make();route=location.href;const n=root.querySelector('.number'),s=root.querySelector('.status'),f=root.querySelector('.fill');f.style.width='0%';
   if(m.loading){n.textContent='…';s.textContent='Jevがあなたの好みと照合しています';return;}
   if(m.error){n.textContent='—';s.textContent=m.error;return;}
@@ -37,6 +46,6 @@
   }
   return {title:document.title,text:text.slice(0,12000),scope:'page'};
  }
- chrome.runtime.onMessage.addListener((m,s,reply)=>{if(s.id!==chrome.runtime.id)return;if(m.type==='radar:render'){render(m);reply({ok:true});}if(m.type==='radar:extract')reply(extract());});
+ ext.runtime.onMessage.addListener((m,s,reply)=>{if(s.id!==ext.runtime.id)return;if(m.type==='radar:render'){render(m);reply({ok:true});}if(m.type==='radar:extract')reply(extract());});
  setInterval(()=>{if(host?.isConnected&&route!==location.href)host.remove();},750);
 })();

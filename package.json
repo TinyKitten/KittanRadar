@@ -1,1 +1,1 @@
-{"name": "kittan-radar", "private": true, "license": "MIT", "type": "module", "scripts": {"test": "node --test tests/*.test.js"}}
+{"name": "kittan-radar", "private": true, "license": "MIT", "type": "module", "scripts": {"test": "node --test tests/*.test.js", "safari": "xcrun safari-web-extension-converter extension --project-location safari --app-name \"Kittan Radar\" --bundle-identifier me.tinykitten.kittan-radar --swift --no-open --no-prompt"}}
