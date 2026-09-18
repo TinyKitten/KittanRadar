@@ -45,6 +45,8 @@ AUTH=(-allowProvisioningUpdates
 # アーカイブも自動署名する。未署名のアーカイブにはチーム情報が残らず、書き出し時に
 # 「Error Downloading App Information」で失敗するため。ランナーは毎回まっさらなので
 # 実行ごとにApple Development証明書が作られる。上限に達したらDeveloperサイトで失効させる。
+# Xcode 16はプロファイルをこのフォルダに保存するが、まっさらなランナーには無く保存に失敗するため先に作る。
+mkdir -p "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
 xcodebuild archive \
   -project "$PROJECT" -scheme "$APP_NAME" -configuration Release \
   -destination 'generic/platform=iOS' -archivePath "$OUT/app.xcarchive" \
