@@ -64,3 +64,7 @@ Node.js 24で9件成功。APIリクエスト形式、Few-shot投入、文字数�
 ## フォント
 
 `extension/fonts/` に Inter と IBM Plex Sans JP のサブセット（UIで使う文字のみ）を同梱しています。どちらも SIL Open Font License 1.1 です。IBM Plex Sans JP は予約フォント名「Plex」があるため、サブセット版は「Kittan Sans JP」に改名しています。ライセンス全文は同フォルダーの `OFL-*.txt` にあります。
+
+## ライセンス
+
+MIT License（[LICENSE](LICENSE)）。ただし `extension/fonts/` 内のフォントは SIL Open Font License 1.1 です。
